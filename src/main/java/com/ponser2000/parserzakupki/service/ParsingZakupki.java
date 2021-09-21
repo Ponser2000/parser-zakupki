@@ -2,7 +2,12 @@ package com.ponser2000.parserzakupki.service;
 
 import com.ponser2000.parserzakupki.service.jsoup.impl.JsoupFacadeServiceImpl;
 import com.ponser2000.parserzakupki.service.smtp.impl.EmailServiceImpl;
+import com.ponser2000.parserzakupki.utils.ProjectConstants;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -36,23 +41,27 @@ public class ParsingZakupki {
     this.webDriver = new ChromeDriver(options);
   }
 
-
-  //@Scheduled(fixedRate = 30000)
+  @SneakyThrows
+  //@Scheduled(fixedRate = 180000)
   @Scheduled(cron = "0 15 5 */1 * *", zone = "Europe/Moscow")
   public void handlePage() throws InterruptedException {
-    LocalDateTime today = LocalDateTime.now();
+    List<String> files = new ArrayList<>();
+
+    LocalDateTime today = LocalDateTime.now().minusDays(1);
+
     log.info("Starting parsing EIS");
-    //today = LocalDateTime.now();
-    //System.out.println(today);
     ParsingEIS parsingEIS = new ParsingEIS();
-    parsingEIS.parsingOrders(jsoup, emailSender);
+    parsingEIS.parsingOrders(today, jsoup, emailSender, files);
     log.info("Ended parsing EIS");
 
     log.info("Starting parsing MOS");
-    //today = LocalDateTime.now();
-    //System.out.println(today);
     ParsingMOS parsingMOS = new ParsingMOS();
-    parsingMOS.parsingOrders(jsoup, emailSender,webDriver);
+    parsingMOS.parsingOrders(today, emailSender,webDriver,files);
     log.info("Ended parsing MOS");
+
+    String subject = "Обновленные закупки за "+today.format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
+
+    emailSender.sendEmailWithAttachment(ProjectConstants.TO_ADDRESS,subject,subject,files);
+
   }
 }

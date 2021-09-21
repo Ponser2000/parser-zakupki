@@ -7,13 +7,17 @@ import com.ponser2000.parserzakupki.service.jsoup.impl.JsoupFacadeServiceImpl;
 import com.ponser2000.parserzakupki.service.smtp.impl.EmailServiceImpl;
 import com.ponser2000.parserzakupki.utils.ExelWorker;
 import com.ponser2000.parserzakupki.utils.PriceParse;
+import com.ponser2000.parserzakupki.utils.ProjectConstants;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.SystemUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -34,26 +38,24 @@ public class ParsingEIS {
   }
 
   @SneakyThrows
-  public void parsingOrders(JsoupFacadeServiceImpl jsoup, EmailServiceImpl emailSender){
+  public void parsingOrders(LocalDateTime today, JsoupFacadeServiceImpl jsoup, EmailServiceImpl emailSender,List<String> files){
     List<Order> ordersList = new ArrayList<>();
 
-    int recordsPerPage = 50;
-    LocalDateTime today = LocalDateTime.now().minusDays(1);
+    int recordsPerPage = ProjectConstants.RECORDS_PER_PAGE;
+
     String publishDateTo = today.format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
-    String publishDateFrom = today.format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
-    //String publishDateFrom = today.minusDays(6).format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
+    String publishDateFrom = today.minusDays(0).format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
 
     String searchPhrase = SearchingPhrase.NONE.getSearchingPhrase();
 
     String url = requrstUrl.get(1,recordsPerPage,publishDateFrom,publishDateTo,searchPhrase);
 
-    //System.out.println("Parsing page " + url);
-
     Document document = jsoup.parsePageToDocument(url);
 
     Elements elementsSpanPaginator = document.select("span.link-text");
 
-    int pages = elementsSpanPaginator.size() > 0 ? Integer.parseInt(elementsSpanPaginator.last().ownText()) : 1;
+    int pages = elementsSpanPaginator.size() > 0 ? Integer.parseInt(
+        Objects.requireNonNull(elementsSpanPaginator.last()).ownText()) : 1;
 
     for (int i = 1; i < pages+1; i++) {
 
@@ -117,11 +119,15 @@ public class ParsingEIS {
 
     //System.out.println("Всего: " + ordersList.size());
     ExelWorker exelWorker = new ExelWorker();
-    String fileName = "//tmp//orderEIS.xls";
-    //String fileName = "C:\\tmp\\orders EIS.xls";
+
+    String tmpDir = SystemUtils.JAVA_IO_TMPDIR;
+    String fileName = tmpDir + "orderEIS.xls";
+
+    files.add(fileName);
+
     exelWorker.createWorkbook(ordersList,fileName);
     //emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)",fileName);
-    emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)",fileName);
+    //emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)",fileName);
   }
 
 }

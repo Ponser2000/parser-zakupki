@@ -2,6 +2,7 @@ package com.ponser2000.parserzakupki.service.smtp.impl;
 
 import com.ponser2000.parserzakupki.service.smtp.EmailService;
 import java.io.FileNotFoundException;
+import java.util.List;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class EmailServiceImpl implements EmailService {
 
   @Override
   public void sendEmailWithAttachment(String toAddress, String subject,
-      String message, String attachment)
+      String message, List<String> files)
       throws MessagingException, FileNotFoundException {
 
     MimeMessage mimeMessage = emailSender.createMimeMessage();
@@ -44,9 +45,12 @@ public class EmailServiceImpl implements EmailService {
     messageHelper.setFrom("info@nika-es.ru");
     messageHelper.setSubject(subject);
     messageHelper.setText(message);
-    FileSystemResource file = new FileSystemResource(ResourceUtils.getFile(attachment));
 
-    messageHelper.addAttachment(file.getFilename(), file);
+    for (String attachment : files) {
+      FileSystemResource file = new FileSystemResource(ResourceUtils.getFile(attachment));
+      messageHelper.addAttachment(file.getFilename(), file);
+    }
+
     emailSender.send(mimeMessage);
     // System.out.println("Email sent!!!!");
   }

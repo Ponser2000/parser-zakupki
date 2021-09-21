@@ -3,17 +3,19 @@ package com.ponser2000.parserzakupki.service;
 import com.ponser2000.parserzakupki.data.chrome.RequestUrlMOS;
 import com.ponser2000.parserzakupki.service.dto.FieldsOrder;
 import com.ponser2000.parserzakupki.service.dto.Order;
-import com.ponser2000.parserzakupki.service.jsoup.impl.JsoupFacadeServiceImpl;
 import com.ponser2000.parserzakupki.service.smtp.impl.EmailServiceImpl;
 import com.ponser2000.parserzakupki.utils.ExelWorker;
 import com.ponser2000.parserzakupki.utils.PriceParse;
+import com.ponser2000.parserzakupki.utils.ProjectConstants;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.SystemUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,31 +35,28 @@ public class ParsingMOS {
     this.requestUrl = new RequestUrlMOS();
   }
 
-
   @SneakyThrows
-  public void parsingOrders(JsoupFacadeServiceImpl jsoup, EmailServiceImpl emailSender,WebDriver webDriver){
+  public void parsingOrders(LocalDateTime today, EmailServiceImpl emailSender,WebDriver webDriver,List<String> files){
     List<Order> ordersList = new ArrayList<>();
 
-    int recordsPerPage = 50;
+    int recordsPerPage = ProjectConstants.RECORDS_PER_PAGE;
 
-    LocalDateTime today = LocalDateTime.now().minusDays(1);
     String publishDateTo = today.format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
-    String publishDateFrom = today.format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
+    String publishDateFrom = today.minusDays(0).format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
 
     String searchPhrase = SearchingPhrase.NONE.getSearchingPhrase();
 
     String url = requestUrl.get(1,recordsPerPage,publishDateFrom,publishDateTo,searchPhrase);
 
-    //System.out.println("Parsing page " + url);
-
     webDriver.get(url);
 
     Thread.sleep(5000);
-    //Document document = jsoup.parsePageToDocument(url);
     Document document = Jsoup.parse(webDriver.getPageSource());
 
     Elements elementsSpanPaginator = document.getElementsByAttributeValue("type","pageItem");
-    int pages = elementsSpanPaginator.size() > 0 ? Integer.parseInt(elementsSpanPaginator.last().ownText()) : 1;
+
+    int pages = elementsSpanPaginator.size() > 0 ? Integer.parseInt(
+          Objects.requireNonNull(elementsSpanPaginator.last()).ownText()) : 1;
 
     for (int i = 1; i < pages+1; i++) {
 
@@ -70,9 +69,6 @@ public class ParsingMOS {
 
       Elements elementsByAttrubute = document.getElementsByAttributeValue("class",
           "PublicListStyles__PublicListContentContainer-sc-1q0smku-1 foobhj").get(0).children();
-
-
-
 
       for (Element element : elementsByAttrubute) {
 
@@ -109,12 +105,9 @@ public class ParsingMOS {
 
         purchaseMethod = law + ", " + purchaseMethod;
 
-        String dates = datesDescr.size() > 2 ? datesDescr.get(2).text().split(" ")[1] : "";
-
         String razmeschenie = datesDescr.size() > 3 ? datesDescr.get(2).text().split(" ")[1] : "00.00.0000";
         String updated = datesDescr.size()>2 ? datesDescr.get(1).ownText().replaceAll("\n","") : "00.00.0000";
         String okonchanie = datesDescr.size() > 3 ? datesDescr.get(2).text().split(" ")[3] : "00.00.0000";
-
 
         fieldsOrder.put(FieldsOrder.NUMBER,number);
         fieldsOrder.put(FieldsOrder.URL,link);
@@ -130,17 +123,15 @@ public class ParsingMOS {
       }
     }
 
+    String tmpDir = SystemUtils.JAVA_IO_TMPDIR;
+    String fileName = tmpDir + "orderMOS.xls";
 
-    //webDriver.quit();
-
-    String fileName = "//tmp//orderMOS.xls";
-    //String fileName = "C:\\tmp\\orders MOS.xls";
-
-    // System.out.println("Всего: " + ordersList.size());
     ExelWorker exelWorker = new ExelWorker();
     exelWorker.createWorkbook(ordersList,fileName);
 
+    files.add(fileName);
+
     //emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (МОС Закупки)","Обновленные закупки за "+publishDateTo+" (МОС Закупки)",fileName);
-    emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (МОС Закупки)","Обновленные закупки за "+publishDateTo+" (МОС Закупки)",fileName);
+    //emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (МОС Закупки)","Обновленные закупки за "+publishDateTo+" (МОС Закупки)",fileName);
   }
 }
