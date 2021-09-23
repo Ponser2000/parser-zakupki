@@ -4,11 +4,9 @@ import com.ponser2000.parserzakupki.data.chrome.RequestUrlEIS;
 import com.ponser2000.parserzakupki.service.dto.FieldsOrder;
 import com.ponser2000.parserzakupki.service.dto.Order;
 import com.ponser2000.parserzakupki.service.jsoup.impl.JsoupFacadeServiceImpl;
-import com.ponser2000.parserzakupki.service.smtp.impl.EmailServiceImpl;
 import com.ponser2000.parserzakupki.utils.ExelWorker;
 import com.ponser2000.parserzakupki.utils.PriceParse;
 import com.ponser2000.parserzakupki.utils.ProjectConstants;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -38,17 +36,15 @@ public class ParsingEIS {
   }
 
   @SneakyThrows
-  public void parsingOrders(LocalDateTime today, JsoupFacadeServiceImpl jsoup, EmailServiceImpl emailSender,List<String> files){
+  public void parsingOrders(LocalDateTime today, JsoupFacadeServiceImpl jsoup, List<String> files){
     List<Order> ordersList = new ArrayList<>();
-
-    int recordsPerPage = ProjectConstants.RECORDS_PER_PAGE;
 
     String publishDateTo = today.format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
     String publishDateFrom = today.minusDays(0).format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
 
     String searchPhrase = SearchingPhrase.NONE.getSearchingPhrase();
 
-    String url = requrstUrl.get(1,recordsPerPage,publishDateFrom,publishDateTo,searchPhrase);
+    String url = requrstUrl.get(1,ProjectConstants.RECORDS_PER_PAGE,publishDateFrom,publishDateTo,searchPhrase);
 
     Document document = jsoup.parsePageToDocument(url);
 
@@ -59,7 +55,7 @@ public class ParsingEIS {
 
     for (int i = 1; i < pages+1; i++) {
 
-      url = requrstUrl.get(i,recordsPerPage,publishDateFrom,publishDateTo, searchPhrase);
+      url = requrstUrl.get(i,ProjectConstants.RECORDS_PER_PAGE,publishDateFrom,publishDateTo, searchPhrase);
 
       document = jsoup.parsePageToDocument(url);
       Elements elementsByAttrubute = document.getElementsByAttributeValue("class",
@@ -117,17 +113,14 @@ public class ParsingEIS {
       }
     }
 
-    //System.out.println("Всего: " + ordersList.size());
     ExelWorker exelWorker = new ExelWorker();
 
     String tmpDir = SystemUtils.JAVA_IO_TMPDIR;
-    String fileName = tmpDir + "orderEIS.xls";
+    String fileName = SystemUtils.IS_OS_WINDOWS ? tmpDir + "orderEIS.xls" : tmpDir + "/" + "orderEIS.xls";
 
     files.add(fileName);
 
     exelWorker.createWorkbook(ordersList,fileName);
-    //emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)",fileName);
-    //emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)","Обновленные закупки за "+publishDateTo+" (ЕИС Закупки)",fileName);
   }
 
 }

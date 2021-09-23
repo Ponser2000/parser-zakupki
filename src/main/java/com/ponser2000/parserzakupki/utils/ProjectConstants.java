@@ -11,5 +11,6 @@ public class ProjectConstants {
 
   public static final int RECORDS_PER_PAGE = 50;
   public static final String TO_ADDRESS = "info@mag-telecom.ru";
+  public static final String FROM_ADDRESS = "info@nika-es.ru";
 
 }
