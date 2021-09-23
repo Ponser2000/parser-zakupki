@@ -3,7 +3,6 @@ package com.ponser2000.parserzakupki.service;
 import com.ponser2000.parserzakupki.data.chrome.RequestUrlMOS;
 import com.ponser2000.parserzakupki.service.dto.FieldsOrder;
 import com.ponser2000.parserzakupki.service.dto.Order;
-import com.ponser2000.parserzakupki.service.smtp.impl.EmailServiceImpl;
 import com.ponser2000.parserzakupki.utils.ExelWorker;
 import com.ponser2000.parserzakupki.utils.PriceParse;
 import com.ponser2000.parserzakupki.utils.ProjectConstants;
@@ -36,17 +35,15 @@ public class ParsingMOS {
   }
 
   @SneakyThrows
-  public void parsingOrders(LocalDateTime today, EmailServiceImpl emailSender,WebDriver webDriver,List<String> files){
+  public void parsingOrders(LocalDateTime today, WebDriver webDriver,List<String> files){
     List<Order> ordersList = new ArrayList<>();
-
-    int recordsPerPage = ProjectConstants.RECORDS_PER_PAGE;
 
     String publishDateTo = today.format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
     String publishDateFrom = today.minusDays(0).format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
 
     String searchPhrase = SearchingPhrase.NONE.getSearchingPhrase();
 
-    String url = requestUrl.get(1,recordsPerPage,publishDateFrom,publishDateTo,searchPhrase);
+    String url = requestUrl.get(1,ProjectConstants.RECORDS_PER_PAGE,publishDateFrom,publishDateTo,searchPhrase);
 
     webDriver.get(url);
 
@@ -60,12 +57,11 @@ public class ParsingMOS {
 
     for (int i = 1; i < pages+1; i++) {
 
-      url = requestUrl.get(i,recordsPerPage,publishDateFrom,publishDateTo, searchPhrase);
+      url = requestUrl.get(i,ProjectConstants.RECORDS_PER_PAGE,publishDateFrom,publishDateTo, searchPhrase);
 
       webDriver.get(url);
       Thread.sleep(5000);
       document = Jsoup.parse(webDriver.getPageSource());
-
 
       Elements elementsByAttrubute = document.getElementsByAttributeValue("class",
           "PublicListStyles__PublicListContentContainer-sc-1q0smku-1 foobhj").get(0).children();
@@ -83,8 +79,6 @@ public class ParsingMOS {
         String number = link.split("/")[link.split("/").length-1];
 
         String objectDescr = numDescr.size() > 0 ? numDescr.get(0).text() : "";
-
-
 
         Elements zakazchikDescr = element.getElementsByAttributeValue("class",
             "ui tiny header PurchaseCardStyles__MainInfoCustomerHeader-sc-3hfhop-0 dzCDib");
@@ -124,14 +118,12 @@ public class ParsingMOS {
     }
 
     String tmpDir = SystemUtils.JAVA_IO_TMPDIR;
-    String fileName = tmpDir + "orderMOS.xls";
+    String fileName = SystemUtils.IS_OS_WINDOWS ? tmpDir + "orderEIS.xls" : tmpDir + "/" + "orderMOS.xls";
 
     ExelWorker exelWorker = new ExelWorker();
     exelWorker.createWorkbook(ordersList,fileName);
 
     files.add(fileName);
 
-    //emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (МОС Закупки)","Обновленные закупки за "+publishDateTo+" (МОС Закупки)",fileName);
-    //emailSender.sendEmailWithAttachment("s.ponomarev@mag-telecom.ru","Обновленные закупки за "+publishDateTo+" (МОС Закупки)","Обновленные закупки за "+publishDateTo+" (МОС Закупки)",fileName);
   }
 }

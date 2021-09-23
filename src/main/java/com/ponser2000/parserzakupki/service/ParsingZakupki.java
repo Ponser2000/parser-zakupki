@@ -42,26 +42,25 @@ public class ParsingZakupki {
   }
 
   @SneakyThrows
-  //@Scheduled(fixedRate = 180000)
+  //@Scheduled(fixedRate = 120000)
   @Scheduled(cron = "0 15 5 */1 * *", zone = "Europe/Moscow")
-  public void handlePage() throws InterruptedException {
+  public void handlePage() {
     List<String> files = new ArrayList<>();
 
     LocalDateTime today = LocalDateTime.now().minusDays(1);
 
     log.info("Starting parsing EIS");
     ParsingEIS parsingEIS = new ParsingEIS();
-    parsingEIS.parsingOrders(today, jsoup, emailSender, files);
+    parsingEIS.parsingOrders(today, jsoup,  files);
     log.info("Ended parsing EIS");
 
     log.info("Starting parsing MOS");
     ParsingMOS parsingMOS = new ParsingMOS();
-    parsingMOS.parsingOrders(today, emailSender,webDriver,files);
+    parsingMOS.parsingOrders(today, webDriver,files);
     log.info("Ended parsing MOS");
 
     String subject = "Обновленные закупки за "+today.format(DateTimeFormatter.ofPattern("dd.MM.uuuu"));
 
     emailSender.sendEmailWithAttachment(ProjectConstants.TO_ADDRESS,subject,subject,files);
-
   }
 }
