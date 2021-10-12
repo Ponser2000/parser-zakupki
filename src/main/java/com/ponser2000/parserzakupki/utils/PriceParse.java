@@ -6,11 +6,11 @@ package com.ponser2000.parserzakupki.utils;
  */
 public class PriceParse {
 
-  public Double toDouble(String price){
-   return Double.parseDouble(price.replaceAll(" ","")
-       .replaceAll("₽","")
-       .replaceAll(",",".")
-       .replaceAll("€","")
-       .replaceAll("\\$",""));
-  }
+    public Double toDouble(String price) {
+        return Double.parseDouble(price.replaceAll(" ", "")
+                .replaceAll("₽", "")
+                .replaceAll(",", ".")
+                .replaceAll("€", "")
+                .replaceAll("\\$", ""));
+    }
 }

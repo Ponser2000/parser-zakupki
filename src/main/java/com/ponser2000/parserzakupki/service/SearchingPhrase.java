@@ -5,17 +5,17 @@ package com.ponser2000.parserzakupki.service;
  * @project parser-zakupki/com.ponser2000.parserzakupki.service
  */
 public enum SearchingPhrase {
-  NONE (""),
-  MFU ("картридж");
+    NONE(""),
+    MFU("картридж");
 
-  private String searchingPhrase;
+    private String searchingPhrase;
 
-  SearchingPhrase(String searchingPhrase) {
-      this.searchingPhrase = searchingPhrase;
-  }
+    SearchingPhrase(String searchingPhrase) {
+        this.searchingPhrase = searchingPhrase;
+    }
 
-  public String getSearchingPhrase(){
-    return searchingPhrase;
-  }
+    public String getSearchingPhrase() {
+        return searchingPhrase;
+    }
 
 }

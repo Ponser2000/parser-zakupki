@@ -10,7 +10,8 @@ import javax.mail.MessagingException;
  */
 public interface EmailService {
 
-  void sendSimpleEmail(final String toAddress, final String subject, final String message);
-  void sendEmailWithAttachment(final String toAddress, final String subject, final String message, final List<String> files) throws MessagingException, FileNotFoundException;
+    void sendSimpleEmail(final String[] toAddress, final String subject, final String message);
+
+    void sendEmailWithAttachment(final String[] toAddress, final String subject, final String message, final List<String> files) throws MessagingException, FileNotFoundException;
 
 }

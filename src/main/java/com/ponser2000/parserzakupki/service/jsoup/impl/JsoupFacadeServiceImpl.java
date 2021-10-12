@@ -2,9 +2,11 @@ package com.ponser2000.parserzakupki.service.jsoup.impl;
 
 import com.ponser2000.parserzakupki.data.chrome.ChromeHeaders;
 import com.ponser2000.parserzakupki.service.jsoup.JsoupFacadeService;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -21,34 +23,34 @@ import org.springframework.stereotype.Service;
 public class JsoupFacadeServiceImpl implements JsoupFacadeService {
 
 
-  public JsoupFacadeServiceImpl(){
+    public JsoupFacadeServiceImpl() {
 
-  }
-
-  @Override
-  public Elements parsePage(String url) {
-    return null;
-  }
-
-  @Override
-  public Document parsePageToDocument(String url) {
-    try {
-
-      if (!url.startsWith("http"))
-        url = "https://" + url;
-
-      String authority = new URL(url).getAuthority();
-
-      Map<String, String> headers = new ChromeHeaders().get();
-
-      Document result = Jsoup.connect(url).
-          headers(headers).
-          get();
-
-      return result;
-    } catch (IOException e) {
-      log.error("Caught exception while parsing {}", url);
-      return new Document(StringUtils.EMPTY);
     }
-  }
+
+    @Override
+    public Elements parsePage(String url) {
+        return null;
+    }
+
+    @Override
+    public Document parsePageToDocument(String url) {
+        try {
+
+            if (!url.startsWith("http"))
+                url = "https://" + url;
+
+            String authority = new URL(url).getAuthority();
+
+            Map<String, String> headers = new ChromeHeaders().get();
+
+            Document result = Jsoup.connect(url).
+                    headers(headers).
+                    get();
+
+            return result;
+        } catch (IOException e) {
+            log.error("Caught exception while parsing {}", url);
+            return new Document(StringUtils.EMPTY);
+        }
+    }
 }

@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
  * @project parser-zakupki/com.ponser2000.parserzakupki.service.jsoup
  */
 public interface JsoupFacadeService {
-  Elements parsePage(String url);
-  Document parsePageToDocument(String url);
+    Elements parsePage(String url);
+
+    Document parsePageToDocument(String url);
 }
