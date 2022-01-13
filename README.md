@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e7133a5b701043b4ae084ec708d76a0b)](https://www.codacy.com/gh/Ponser2000/parser-zakupki/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Ponser2000/parser-zakupki&amp;utm_campaign=Badge_Grade)
+
 ## Overview
 Приложение позволяющее парсить сайты с очень большими вставками на JavaScript
 
