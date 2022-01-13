@@ -1,26 +1,22 @@
 ## Overview
-Repository with preconfigured maven project with junit5 configuration on a board.
+Приложение позволяющее парсить сайты с очень большими вставсками на JavaScript
+Для примера взят сайт закупок https://zakupki.gov.ru
+Результат парсинга оформляется в Exel-файл и отправляется на почту
+Данная история крутится в docker окружении
 
-## Building
-...
+### Подготовка контейнера приложения
+1. build JAR package
+    - mvn clean package
+2. build docker image
+    - docker build -t selenium_docker_sample .
 
-## Troubleshooting
-...
+### Запуск приложения
+a. (Вариант 1) Запуск в консоли
+- docker run selenium_docker_sample -p 8080:8080 -d
 
-## Release Notes
-Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
+b. (Вариант 2) Через composer
+- docker-composer up -d
 
-## Authors
-* Sergey Ponomarev - [Ponser2000](https://github.com/Ponser2000)
-
-## Acknowledgments
-...
-
-## Contributing
-Please, follow [Contributing](CONTRIBUTING.md) page.
-
-## Code of Conduct
-Please, follow [Code of Conduct](CODE_OF_CONDUCT.md) page.
 
 ## License
 This project is Apache License 2.0 - see the [LICENSE](LICENSE) file for details

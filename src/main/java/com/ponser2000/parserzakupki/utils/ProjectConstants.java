@@ -13,12 +13,12 @@ import lombok.experimental.UtilityClass;
 public class ProjectConstants {
 
     public static final int RECORDS_PER_PAGE = 50;
-    public static final String FROM_ADDRESS = "info@nika-es.ru";
+    public static final String FROM_ADDRESS = "from email address";
     public static final String[] TO_ADDRESS = {
-            "sales@mag-telecom.ru",
-            "i.melnikova@mag-telecom.ru",
-            "o.kazorin@mag-telecom.ru",
-            "s.ponomarev@mag-telecom.ru"
+            "to email address 1",
+            "to email address 2",
+            "to email address 3",
+            "to email address 4"
 
     };
 
