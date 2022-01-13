@@ -1,4 +1,3 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/14373177fc224dafb0ccc56150916677)](https://app.codacy.com/gh/Ponser2000/parser-zakupki?utm_source=github.com&utm_medium=referral&utm_content=Ponser2000/parser-zakupki&utm_campaign=Badge_Grade_Settings)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e7133a5b701043b4ae084ec708d76a0b)](https://www.codacy.com/gh/Ponser2000/parser-zakupki/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Ponser2000/parser-zakupki&amp;utm_campaign=Badge_Grade)
 
 ## Overview
