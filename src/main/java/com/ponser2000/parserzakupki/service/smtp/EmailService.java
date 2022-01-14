@@ -1,8 +1,8 @@
 package com.ponser2000.parserzakupki.service.smtp;
 
+import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.util.List;
-import javax.mail.MessagingException;
 
 /**
  * @author Sergey Ponomarev on 15.09.2021

@@ -6,21 +6,16 @@ import com.ponser2000.parserzakupki.service.dto.Order;
 import com.ponser2000.parserzakupki.service.jsoup.impl.JsoupFacadeServiceImpl;
 import com.ponser2000.parserzakupki.utils.ExelWorker;
 import com.ponser2000.parserzakupki.utils.PriceParse;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.SystemUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static com.ponser2000.parserzakupki.utils.ProjectConstants.RECORDS_PER_PAGE;
 import static com.ponser2000.parserzakupki.utils.ProjectConstants.URL_EIS;

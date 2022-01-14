@@ -3,12 +3,6 @@ package com.ponser2000.parserzakupki.service;
 import com.ponser2000.parserzakupki.service.jsoup.impl.JsoupFacadeServiceImpl;
 import com.ponser2000.parserzakupki.service.smtp.impl.EmailServiceImpl;
 import com.ponser2000.parserzakupki.utils.ProjectConstants;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +10,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Sergey Ponomarev on 06.09.2021

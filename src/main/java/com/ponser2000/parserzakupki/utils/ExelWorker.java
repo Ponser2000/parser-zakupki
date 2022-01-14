@@ -2,27 +2,15 @@ package com.ponser2000.parserzakupki.utils;
 
 import com.ponser2000.parserzakupki.service.dto.FieldsOrder;
 import com.ponser2000.parserzakupki.service.dto.Order;
-import com.ponser2000.parserzakupki.service.smtp.impl.EmailServiceImpl;
+import org.apache.poi.common.usermodel.HyperlinkType;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-
-import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFHyperlink;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.AutoFilter;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  * @author Sergey Ponomarev on 08.09.2021
@@ -131,7 +119,7 @@ public class ExelWorker {
         }
 
         //try (FileOutputStream out = new FileOutputStream(new File(fileName))) {
-        try (FileOutputStream out = new FileOutputStream(new File(fileName))) {
+        try (FileOutputStream out = new FileOutputStream(fileName)) {
             workbook.write(out);
         } catch (IOException e) {
             e.printStackTrace();

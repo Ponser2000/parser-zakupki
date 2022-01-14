@@ -2,19 +2,18 @@ package com.ponser2000.parserzakupki.service.smtp.impl;
 
 import com.ponser2000.parserzakupki.service.smtp.EmailService;
 import com.ponser2000.parserzakupki.utils.ProjectConstants;
-
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Objects;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Sergey Ponomarev on 15.09.2021
