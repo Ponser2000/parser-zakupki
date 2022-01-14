@@ -44,7 +44,7 @@ public class ParsingZakupki {
     }
 
     @SneakyThrows
-    //@Scheduled(fixedRate = 600000)
+    //@Scheduled(fixedRate = 300000)
     @Scheduled(cron = "0 30 9 */1 * *", zone = "Europe/Moscow")
     public void handlePage() {
         List<String> files = new ArrayList<>();

@@ -22,7 +22,7 @@ RUN apt-get install -y p7zip \
     bzip2
 
 
-RUN apt-get install -y openjdk-16-jdk ant maven
+RUN apt-get install -y openjdk-17-jdk ant maven
 
 RUN java -version
 RUN javac -version

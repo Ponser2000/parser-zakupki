@@ -24,6 +24,8 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
+import static com.ponser2000.parserzakupki.utils.ProjectConstants.RECORDS_PER_PAGE;
+
 /**
  * @author Sergey Ponomarev on 16.09.2021
  * @project parser-zakupki/com.ponser2000.parserzakupki.service
@@ -45,7 +47,7 @@ public class ParsingMOS {
 
         String searchPhrase = SearchingPhrase.NONE.getSearchingPhrase();
 
-        String url = requestUrl.get(1, ProjectConstants.RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
+        String url = requestUrl.get(1, RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
 
         webDriver.get(url);
 
@@ -59,7 +61,7 @@ public class ParsingMOS {
 
         for (int i = 1; i < pages + 1; i++) {
 
-            url = requestUrl.get(i, ProjectConstants.RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
+            url = requestUrl.get(i, RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
 
             webDriver.get(url);
             Thread.sleep(5000);

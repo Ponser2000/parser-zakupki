@@ -6,7 +6,6 @@ import com.ponser2000.parserzakupki.service.dto.Order;
 import com.ponser2000.parserzakupki.service.jsoup.impl.JsoupFacadeServiceImpl;
 import com.ponser2000.parserzakupki.utils.ExelWorker;
 import com.ponser2000.parserzakupki.utils.PriceParse;
-import com.ponser2000.parserzakupki.utils.ProjectConstants;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +22,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+import static com.ponser2000.parserzakupki.utils.ProjectConstants.RECORDS_PER_PAGE;
+import static com.ponser2000.parserzakupki.utils.ProjectConstants.URL_EIS;
+
 /**
  * @author Sergey Ponomarev on 16.09.2021
  * @project parser-zakupki/com.ponser2000.parserzakupki.service
@@ -30,11 +32,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ParsingEIS {
 
-    private final RequestUrlEIS requrstUrl;
+    private final RequestUrlEIS requestUrl;
 
 
     public ParsingEIS() {
-        this.requrstUrl = new RequestUrlEIS();
+        this.requestUrl = new RequestUrlEIS();
     }
 
     @SneakyThrows
@@ -46,7 +48,7 @@ public class ParsingEIS {
 
         String searchPhrase = SearchingPhrase.NONE.getSearchingPhrase();
 
-        String url = requrstUrl.get(1, ProjectConstants.RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
+        String url = requestUrl.get(1, RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
 
         Document document = jsoup.parsePageToDocument(url);
 
@@ -57,7 +59,7 @@ public class ParsingEIS {
 
         for (int i = 1; i < pages + 1; i++) {
 
-            url = requrstUrl.get(i, ProjectConstants.RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
+            url = requestUrl.get(i, RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
 
             document = jsoup.parsePageToDocument(url);
             Elements elementsByAttrubute = document.getElementsByAttributeValue("class",
@@ -75,7 +77,7 @@ public class ParsingEIS {
                 String link = numDescr.size() > 0 ? numDescr.get(0).getElementsByTag("a").get(0).attributes().get("href")
                         : "";
 
-                link = "https://zakupki.gov.ru/" + link.replaceAll("https://zakupki.gov.ru/", "");
+                link = URL_EIS + link.replaceAll(URL_EIS, "");
 
                 Elements objDescr = element.getElementsByAttributeValue("class",
                         "registry-entry__body-value");
