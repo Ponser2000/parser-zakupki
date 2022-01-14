@@ -11,7 +11,7 @@ public class MavenTemplateRepositoryTest {
 
     @Test
     public void shouldCreateJavaRepositoryTemplateMain() {
-        com.ponser2000.parserzakupki.ParserZakupkiApplication main = new com.ponser2000.parserzakupki.ParserZakupkiApplication();
+        ParserZakupkiApplication main = new ParserZakupkiApplication();
         Assertions.assertNotNull(main);
     }
 

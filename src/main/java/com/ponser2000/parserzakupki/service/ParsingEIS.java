@@ -52,19 +52,21 @@ public class ParsingEIS {
         int pages = elementsSpanPaginator.size() > 0 ? Integer.parseInt(
                 Objects.requireNonNull(elementsSpanPaginator.last()).ownText()) : 1;
 
+        String cssElementClass = "class";
+
         for (int i = 1; i < pages + 1; i++) {
 
             url = requestUrl.get(i, RECORDS_PER_PAGE, publishDateFrom, publishDateTo, searchPhrase);
 
             document = jsoup.parsePageToDocument(url);
-            Elements elementsByAttrubute = document.getElementsByAttributeValue("class",
+            Elements elementsByAttrubute = document.getElementsByAttributeValue(cssElementClass,
                     "search-registry-entry-block box-shadow-search-input");
 
             for (Element element : elementsByAttrubute) {
 
                 Map<FieldsOrder, String> fieldsOrder = new HashMap<>();
 
-                Elements numDescr = element.getElementsByAttributeValue("class",
+                Elements numDescr = element.getElementsByAttributeValue(cssElementClass,
                         "registry-entry__header-mid__number");
                 String number = numDescr.size() > 0 ? numDescr.get(0).getElementsByTag("a").get(0).ownText()
                         : "0000000";
@@ -74,24 +76,24 @@ public class ParsingEIS {
 
                 link = URL_EIS + link.replaceAll(URL_EIS, "");
 
-                Elements objDescr = element.getElementsByAttributeValue("class",
+                Elements objDescr = element.getElementsByAttributeValue(cssElementClass,
                         "registry-entry__body-value");
                 String objectDescr = objDescr.size() > 0 ? objDescr.get(0).text() : "";
 
-                Elements zakazchikDescr = element.getElementsByAttributeValue("class",
+                Elements zakazchikDescr = element.getElementsByAttributeValue(cssElementClass,
                         "registry-entry__body-href");
                 String zakazchik =
                         zakazchikDescr.size() > 0 ? zakazchikDescr.get(0).getElementsByTag("a").get(0).ownText()
                                 : "-----";
 
-                Elements purchaseMethodDescr = element.getElementsByAttributeValue("class", "col-9 p-0 registry-entry__header-top__title text-truncate");
+                Elements purchaseMethodDescr = element.getElementsByAttributeValue(cssElementClass, "col-9 p-0 registry-entry__header-top__title text-truncate");
                 String purchaseMethod = purchaseMethodDescr.size() > 0 ? purchaseMethodDescr.get(0).text() : "";
 
-                Elements priceDescr = element.getElementsByAttributeValue("class", "price-block__value");
+                Elements priceDescr = element.getElementsByAttributeValue(cssElementClass, "price-block__value");
 
                 Double price = priceDescr.size() > 0 ? (new PriceParse()).toDouble(priceDescr.get(0).ownText()) : 0.0;
 
-                Elements datesDescr = element.getElementsByAttributeValue("class", "data-block__value");
+                Elements datesDescr = element.getElementsByAttributeValue(cssElementClass, "data-block__value");
 
                 String razmeschenie = datesDescr.size() > 2 ? datesDescr.get(0).ownText().replaceAll("\n", "") : "00.00.0000";
                 String updated = datesDescr.size() > 2 ? datesDescr.get(1).ownText().replaceAll("\n", "") : "00.00.0000";

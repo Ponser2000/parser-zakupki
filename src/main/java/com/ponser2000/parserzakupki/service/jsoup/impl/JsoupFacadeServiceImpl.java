@@ -35,8 +35,9 @@ public class JsoupFacadeServiceImpl implements JsoupFacadeService {
     public Document parsePageToDocument(String url) {
         try {
 
-            if (!url.startsWith("http"))
+            if (!url.startsWith("http")) {
                 url = "https://" + url;
+            }
 
             String authority = new URL(url).getAuthority();
 

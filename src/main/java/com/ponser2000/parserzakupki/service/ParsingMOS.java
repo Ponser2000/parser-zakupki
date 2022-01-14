@@ -61,14 +61,16 @@ public class ParsingMOS {
             Thread.sleep(5000);
             document = Jsoup.parse(webDriver.getPageSource());
 
-            Elements elementsByAttrubute = document.getElementsByAttributeValue("class",
+            String cssElementClass = "class";
+
+            Elements elementsByAttrubute = document.getElementsByAttributeValue(cssElementClass,
                     "PublicListStyles__PublicListContentContainer-sc-1q0smku-1 foobhj").get(0).children();
 
             for (Element element : elementsByAttrubute) {
 
                 Map<FieldsOrder, String> fieldsOrder = new HashMap<>();
 
-                Elements numDescr = element.getElementsByAttributeValue("class",
+                Elements numDescr = element.getElementsByAttributeValue(cssElementClass,
                         "ui header CardStyles__MainInfoNameHeader-sc-18miw4v-7 drFPNq");
 
                 String link = numDescr.size() > 0 ? numDescr.get(0).getElementsByTag("a").get(0).attributes().get("href")
@@ -78,20 +80,20 @@ public class ParsingMOS {
 
                 String objectDescr = numDescr.size() > 0 ? numDescr.get(0).text() : "";
 
-                Elements zakazchikDescr = element.getElementsByAttributeValue("class",
+                Elements zakazchikDescr = element.getElementsByAttributeValue(cssElementClass,
                         "ui tiny header PurchaseCardStyles__MainInfoCustomerHeader-sc-3hfhop-0 dzCDib");
                 String zakazchik =
                         zakazchikDescr.size() > 0 ? zakazchikDescr.get(0).getElementsByTag("a").get(0).text()
                                 : "-----";
 
-                Elements purchaseMethodDescr = element.getElementsByAttributeValue("class", "CardStyles__FlexContainer-sc-18miw4v-0 gYQAXs CardStyles__MainInfoTypeHeader-sc-18miw4v-2 iOqMyw");
+                Elements purchaseMethodDescr = element.getElementsByAttributeValue(cssElementClass, "CardStyles__FlexContainer-sc-18miw4v-0 gYQAXs CardStyles__MainInfoTypeHeader-sc-18miw4v-2 iOqMyw");
                 String purchaseMethod = purchaseMethodDescr.size() > 0 ? purchaseMethodDescr.get(0).text() : "";
 
-                Elements priceDescr = element.getElementsByAttributeValue("class", "ui blue header CardStyles__PriceInfoNumber-sc-18miw4v-8 jzBqrB");
+                Elements priceDescr = element.getElementsByAttributeValue(cssElementClass, "ui blue header CardStyles__PriceInfoNumber-sc-18miw4v-8 jzBqrB");
 
                 Double price = priceDescr.size() > 0 ? (new PriceParse()).toDouble(priceDescr.get(0).ownText()) : 0.0;
 
-                Elements datesDescr = element.getElementsByAttributeValue("class", "CardStyles__AdditionalInfoContainer-sc-18miw4v-9 irbRxZ").get(0).children();
+                Elements datesDescr = element.getElementsByAttributeValue(cssElementClass, "CardStyles__AdditionalInfoContainer-sc-18miw4v-9 irbRxZ").get(0).children();
 
                 String law = datesDescr.size() > 1 ? datesDescr.get(1).text() : "";
 
