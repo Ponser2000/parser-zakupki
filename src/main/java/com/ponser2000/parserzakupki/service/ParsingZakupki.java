@@ -3,6 +3,7 @@ package com.ponser2000.parserzakupki.service;
 import com.ponser2000.parserzakupki.service.jsoup.impl.JsoupFacadeServiceImpl;
 import com.ponser2000.parserzakupki.service.smtp.impl.EmailServiceImpl;
 import com.ponser2000.parserzakupki.utils.ProjectConstants;
+import jakarta.mail.MessagingException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
@@ -11,6 +12,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ public class ParsingZakupki {
         this.jsoup = jsoup;
         this.emailSender = emailSender;
 
-        ChromeOptions options = new ChromeOptions().setHeadless(true);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-extensions");
         options.addArguments("--whitelisted-ips=");
@@ -44,8 +47,9 @@ public class ParsingZakupki {
 
     @SneakyThrows
     //@Scheduled(fixedRate = 300000)
-    @Scheduled(cron = "0 30 9 */1 * *", zone = "Europe/Moscow")
-    public void handlePage() {
+    //@Scheduled(cron = "0 30 9 */1 * *", zone = "Europe/Moscow")
+    @Scheduled(cron = "0 47 12 */1 * *", zone = "Europe/Moscow")
+    public void handlePage() throws MessagingException, FileNotFoundException {
         List<String> files = new ArrayList<>();
 
         LocalDateTime today = LocalDateTime.now().minusDays(1);
